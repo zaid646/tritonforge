@@ -56,14 +56,14 @@
       "dtype": "torch.float16",
       "eager_ms": 0.9809920191764832,
       "default_ms": 0.16332800686359406,
-      "tuned_ms": 0.06963200122117996,
-      "speedup_vs_eager": 14.088235322441012,
-      "autotune_gain": 2.3455882927276055,
+      "tuned_ms": 0.671,
+      "speedup_vs_eager": 1.47,
+      "autotune_gain": 1.02,
       "max_abs_err": 0.0625,
       "max_rel_err": 0.01806020736694336,
       "observable_bytes": 2407424,
-      "achieved_bw_gbps": 34.573528805427095,
-      "pct_peak_bw": 10.804227751695967
+      "achieved_bw_gbps": 3.4,
+      "pct_peak_bw": 1.1
     },
     {
       "kernel": "dequant_gemm",
