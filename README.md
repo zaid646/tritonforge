@@ -27,6 +27,10 @@ loop. See [`docs/DESIGN.md`](docs/DESIGN.md) and the three kernel bugs it fixed 
   [`results/e2e.json`](results/e2e.json).
 - Correctness: 31 GPU tests against PyTorch oracles; `compute-sanitizer` memcheck,
   racecheck and synccheck all clean.
+- CI regression gate: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) fails the
+  build when a committed kernel metric gets slower or less accurate. A worked example
+  (deliberate regression, failing PR, log) is in
+  [`docs/REGRESSION_DEMO.md`](docs/REGRESSION_DEMO.md).
 
 ## Layout
 

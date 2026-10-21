@@ -65,6 +65,19 @@ sizes. Decode-sized rows are latency-bound (few programs, one wave).
 - Kernel bugs found and fixed: 3 (one correctness, two performance/design); see
   `docs/BUG_LOG.md`.
 
+### Report accessibility and CI
+
+The generated report (`reports/index.html`) is static HTML with inline SVG charts
+(`role="img"` with `<title>`/`<desc>`), table `<caption>`s and `<th scope="col">`
+headers, a skip link, and no JavaScript.
+
+- **axe-core** (WCAG 2.0/2.1 A + AA + best-practice rules): **0 violations**.
+- **Lighthouse** (`reports/lighthouse.json`): performance **100**, accessibility **100**,
+  best-practices **100**, SEO **100**.
+- Regression gate: PR [#1](https://github.com/zaid646/tritonforge/pull/1) deliberately
+  regressed one kernel metric and the `check_regression.py` CI step failed as designed
+  (`docs/REGRESSION_DEMO.md`).
+
 ## 2. End-to-end: Qwen2.5-0.5B-Instruct on T4
 
 64 generated tokens, batch 1, fp16 (NF4 for bitsandbytes). TTFT is the prefill, ITL is
