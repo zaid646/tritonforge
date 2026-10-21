@@ -1,0 +1,19 @@
+{
+  "device": "Tesla T4",
+  "note": "Regression thresholds derived from results/kernels.json (T4, 2026-10-21). A CI failure here means a kernel got slower or less accurate than the committed baseline.",
+  "rules": [
+    {"kernel": "dequant_gemm", "m": 1, "n": 4864, "k": 896, "min_speedup": 6.0, "max_abs_err": 0.05, "max_ms": 0.20},
+    {"kernel": "dequant_gemm", "m": 8, "n": 4864, "k": 896, "min_speedup": 8.0, "max_abs_err": 0.15, "max_ms": 0.15},
+    {"kernel": "dequant_gemm", "m": 64, "n": 4864, "k": 896, "min_speedup": 2.5, "max_abs_err": 0.15, "max_ms": 0.60},
+    {"kernel": "dequant_gemm", "m": 128, "n": 4864, "k": 896, "min_speedup": 1.2, "max_abs_err": 0.15, "max_ms": 1.00},
+    {"kernel": "rmsnorm_residual", "m": 1024, "n": 896, "k": 896, "min_speedup": 3.0, "max_abs_err": 0.02, "max_ms": 0.06},
+    {"kernel": "rmsnorm_residual", "m": 512, "n": 1536, "k": 1536, "min_speedup": 2.5, "max_abs_err": 0.02},
+    {"kernel": "swiglu", "m": 512, "n": 4864, "k": 4864, "min_speedup": 6.0, "max_abs_err": 0.02, "min_pct_peak": 55.0},
+    {"kernel": "swiglu", "m": 1024, "n": 4864, "k": 4864, "min_speedup": 6.0, "max_abs_err": 0.02, "min_pct_peak": 55.0}
+  ],
+  "e2e": {
+    "max_ppl_delta_vs_fp16": 6.0,
+    "min_decode_tokens_per_s": 15.0,
+    "max_peak_vram_gb": 1.2
+  }
+}

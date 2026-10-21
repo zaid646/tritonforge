@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tritonforge"
+version = "0.1.0"
+description = "Custom Triton kernels for quantized LLM inference: int4 dequant GEMM, fused RMSNorm+residual, fused SwiGLU"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Zaid Hussain" }]
+dependencies = [
+    "torch>=2.4",
+    "triton>=3.0",
+]
+
+[project.optional-dependencies]
+bench = [
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "matplotlib",
+]
+e2e = [
+    "transformers>=4.44",
+    "datasets",
+    "accelerate",
+    "bitsandbytes",
+]
+dev = [
+    "pytest>=8",
+    "ruff",
+]
+
+[project.scripts]
+tritonforge = "tritonforge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4"]
+ignore = ["B008"]
+
+[tool.pytest.ini_options]
+markers = [
+    "gpu: requires a CUDA GPU",
+    "slow: long-running benchmark or end-to-end test",
+]
+addopts = "-q"
+testpaths = ["tests"]
