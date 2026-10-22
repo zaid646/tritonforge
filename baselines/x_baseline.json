@@ -1,0 +1,44 @@
+{
+  "hardware_cpu": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "note": "Thresholds are set slightly below the measured Colab values; edit only with a fresh full run.",
+  "bench": {
+    "pytorch_eager": {
+      "batch_1": {"min_tokens_per_s": 3.5, "max_ttft_ms": 900},
+      "batch_8": {"min_tokens_per_s": 10.0, "max_ttft_ms": 2500}
+    },
+    "torch_compile": {
+      "batch_1": {"min_tokens_per_s": 3.5, "max_ttft_ms": 900},
+      "batch_8": {"min_tokens_per_s": 9.5, "max_ttft_ms": 2500}
+    },
+    "onnxruntime": {
+      "batch_1": {"min_tokens_per_s": 4.0, "max_ttft_ms": 500},
+      "batch_8": {"min_tokens_per_s": 19.0, "max_ttft_ms": 2000}
+    },
+    "ov_fp16": {
+      "batch_1": {"min_tokens_per_s": 6.5, "max_ttft_ms": 650},
+      "batch_8": {"min_tokens_per_s": 17.0, "max_ttft_ms": 2800}
+    },
+    "ov_int8": {
+      "batch_1": {"min_tokens_per_s": 7.5, "max_ttft_ms": 550},
+      "batch_8": {"min_tokens_per_s": 18.0, "max_ttft_ms": 2800}
+    },
+    "ov_int4_g128": {
+      "batch_1": {"min_tokens_per_s": 7.5, "max_ttft_ms": 550},
+      "batch_8": {"min_tokens_per_s": 18.0, "max_ttft_ms": 2800}
+    },
+    "ov_int4_awq_g128": {
+      "batch_1": {"min_tokens_per_s": 7.5, "max_ttft_ms": 550},
+      "batch_8": {"min_tokens_per_s": 18.0, "max_ttft_ms": 2800}
+    }
+  },
+  "accuracy": {
+    "fp16": {"min_top1_pct": 99.0, "max_ppl_delta_pct": 0.5},
+    "int8": {"min_top1_pct": 92.0, "max_ppl_delta_pct": 1.0},
+    "int4_g128": {"min_top1_pct": 68.0, "max_ppl_delta_pct": 30.0},
+    "int4_awq_g128": {"min_top1_pct": 72.0, "max_ppl_delta_pct": 25.0}
+  },
+  "sycl": {
+    "swiglu": {"min_pct_peak_bw": 70.0, "max_abs_err": 2e-05},
+    "rmsnorm_residual": {"min_pct_peak_bw": 55.0, "max_abs_err": 2e-05}
+  }
+}

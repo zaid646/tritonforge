@@ -28,6 +28,15 @@ e2e = [
     "accelerate",
     "bitsandbytes",
 ]
+x = [
+    "transformers>=4.44",
+    "datasets",
+    "numpy",
+    "matplotlib",
+    "openvino>=2025",
+    "nncf",
+    "optimum-intel",
+]
 dev = [
     "pytest>=8",
     "ruff",

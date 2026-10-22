@@ -82,3 +82,121 @@ are separated from measurement and test bugs so the "kernel bug" count is honest
   a bug.
 - **Fix:** relaxed the bound to the format's theoretical range (max_abs < 0.3,
   mean_abs < 0.12) and kept the value explicit in the test.
+
+# TritonForge-X (Intel CPU) bugs
+
+These are the real failures hit while porting to an Intel CPU host. They are kept
+because each one changed a script or a conclusion in the report.
+
+## Environment bug (4)
+
+### E1. `optimum-intel` import failed on `diffusers` + `huggingface_hub` 1.21
+
+- **Symptom:** `from optimum.intel import OVModelForCausalLM` raised
+  `ImportError: cannot import name 'resolve_revision' from 'huggingface_hub.utils'`.
+- **Root cause:** the installed `diffusers` release imports a hub helper that was
+  removed in `huggingface_hub` 1.21; `optimum-intel` imports `diffusers` even when only
+  text generation is used.
+- **Caught by:** the first conversion run, before any model was written.
+- **Fix:** uninstalled `diffusers` (not needed for this task) instead of pinning the
+  whole hub stack backwards. Recorded the remaining pins in `docs/HARDWARE.md`.
+
+### E2. `load_dataset("wikitext")` is no longer a valid script id
+
+- **Symptom:** PPL evaluation aborted with `HfUriError: Invalid HF URI
+  'hf://datasets/wikitext'`.
+- **Root cause:** `datasets` 4.x removed the legacy short-name resolution.
+- **Fix:** use the canonical id `Salesforce/wikitext`, config `wikitext-2-raw-v1`.
+
+### E3. `optimum-onnx` and `optimum-intel` cannot share one venv
+
+- **Symptom:** installing `optimum-onnx` downgraded `optimum` to a version that
+  `optimum-intel` rejected, and vice versa.
+- **Root cause:** both packages pin the `optimum` core tightly in opposite directions.
+- **Fix:** split environments. ONNX export/benchmarks run in `/content/venv_ort`
+  (optimum 2.1.0 + optimum-onnx 0.1.0 + transformers 4.57.3); OpenVINO keeps the main
+  environment. `scripts/run_x_benchmarks.sh` selects the interpreter per backend.
+
+### E4. `lscpu -J` has no cache objects on this image
+
+- **Symptom:** `probe_hardware.py` crashed with `KeyError: 'caches'`.
+- **Root cause:** util-linux on Ubuntu 24.04 omits the `caches` array in JSON mode for
+  this kernel.
+- **Fix:** fall back to parsing raw `lscpu` for L1d/L2/L3 sizes; cache rows are marked
+  `source: "lscpu text"` in `results/x/hardware.json`.
+
+### E5. `TextStreamer` rejects batch sizes above one
+
+- **Symptom:** every batch-8 backend died with
+  `ValueError: TextStreamer only supports batch size 1`.
+- **Root cause:** the timing hook subclassed `TextStreamer`, which decodes and prints
+  text and is hard-coded to one sequence.
+- **Fix:** replaced it with a `StoppingCriteria` that only records timestamps (never
+  stops generation). It works for any batch size and no longer spends CPU decoding text
+  inside the timed loop.
+
+## Measurement bug (5)
+
+### M2. Streaming timer counted the prompt tokens
+
+- **Symptom:** TTFT looked plausible but ITL was ~2x too high and tok/s too low.
+- **Root cause:** `TextStreamer.put` is called for the prompt batch first; the harness
+  counted that call as a generated token.
+- **Fix:** only record a token when `value.numel() == batch_size`, i.e. a real decode
+  step. Verified against `max_new_tokens` in every bench JSON.
+
+### M3. `torch.compile(dynamic=False)` recompiled at every decode length
+
+- **Symptom:** the `torch_compile` batch-1 benchmark did not finish its first 10-run
+  block after several minutes, versus ~90 s for eager.
+- **Root cause:** autoregressive decoding changes the sequence length every step, so
+  static-shape specialization triggered a fresh compilation per step.
+- **Fix:** compile with `dynamic=True`. The honest result is that `torch.compile` is
+  **not faster** than eager for this batch-1 decode workload on this CPU.
+
+### M4. Kernel timings were taken while PPL validation was running
+
+- **Symptom:** the first SYCL sweep reported 2.99 GB/s for SWIGLU and 10.65 GB/s for
+  STREAM, far below what the same binary reached later.
+- **Root cause:** the validation job owned both vCPUs, so the kernel process was
+  timeshared.
+- **Fix:** all kernel and end-to-end timings are now run sequentially on an idle VM,
+  pinned with `taskset -c 0,1`. The contaminated numbers were discarded, not reported.
+
+### M5. Report reused the large-shape kernel time for every row
+
+- **Symptom:** the per-shape speedup column showed identical SYCL milliseconds for
+  512x4864 and 3x895.
+- **Root cause:** `make_x_report.py` read `sycl["best"][op]["ms_mean"]`, which is the
+  tuning shape, for every validation row.
+- **Fix:** `run_sycl.py` now benchmarks each validation shape with the selected config
+  and stores shape-matched `ms_mean`; the report reads that field.
+
+### E6. `benchmark_app` rejects hints plus explicit thread counts
+
+- **Symptom:** the OpenVINO layer profile produced an empty table; the log said
+  `-nstreams, -nthreads and -pin ... explicitly set -hint option to none`.
+- **Fix:** pass `-hint none` when pinning `-nthreads 2` for the detailed counters run.
+
+## Numeric bug (1)
+
+### N1. SYCL SwiGLU vector path dropped the tail of non-multiple-of-4 columns
+
+- **Symptom:** `swiglu 3x895` failed parity with max abs error 0.697 while every
+  multiple-of-4 shape passed at 1e-7.
+- **Root cause:** the host computed the grid from `n / vec` (vec = 4) even when the
+  kernel fell back to the scalar path because `n % 4 != 0`, so only the first 223
+  columns were launched.
+- **Fix:** compute the elements-per-thread from whether the vector path is actually
+  taken (`use_vec4 = vec == 4 && n % 4 == 0`), then size the grid from that. Re-ran all
+  eight validation shapes: all pass.
+
+## Accuracy finding, not a bug
+
+### A1. int4 g128 loses 23% PPL; AWQ halves the damage but does not remove it
+
+- The naive RTN int4 model reaches 73.8% top-1 agreement and +22.95% wikitext-2 PPL.
+  AWQ improves this to 76.9% and +15.74%, at identical size (325 MB).
+- This is a real quality/size trade-off on a 0.5B model, not a harness defect: fp16 is
+  exact and int8 is within 0.3% PPL. The report keeps int4 in the table and labels it as
+  unsuitable for quality-sensitive use.

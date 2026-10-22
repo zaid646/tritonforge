@@ -1,0 +1,35 @@
+Command line parameters
+-m;/content/models/ov_fp16/openvino_model.xml
+-d;CPU
+-niter;3
+-nireq;1
+-hint;none
+-nthreads;2
+-report_type;detailed_counters
+-report_folder;/content/TritonForge/results/x/profiles/ov_report
+-data_shape;input_ids[1,32],attention_mask[1,32],position_ids[1,32],beam_idx[1]
+-i;beam_idx:/content/TritonForge/results/x/profiles/ov_report/beam_idx.bin
+
+Configuration setup
+topology;Model1
+target device;CPU
+API;async
+inference_only;False
+precision;UNSPECIFIED
+batch size;1
+number of iterations;3
+number of parallel infer requests;1
+duration (ms);0
+
+Execution results
+read model time (ms);149.93
+compile model time (ms);1288.13
+first inference time (ms);1626.94
+total execution time (ms);2510.56
+total number of iterations;3
+latency (ms);839.27
+avg latency;836.59
+min latency;818.82
+max latency;851.70
+throughput;1.19
+

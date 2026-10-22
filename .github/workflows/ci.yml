@@ -19,7 +19,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install ruff pytest pandas pyarrow
+          pip install ruff pytest pandas pyarrow numpy
+
+      # POCL gives the runner a CPU OpenCL device so the fused SYCL kernels can be
+      # parity-tested without installing oneAPI (and without an Intel CPU).
+      - name: Install POCL for the kernel parity test
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends pocl-opencl-icd ocl-icd-opencl-dev clinfo
 
       - name: Install package (no GPU deps)
         run: pip install -e . --no-deps
@@ -32,3 +39,6 @@ jobs:
 
       - name: Kernel/end-to-end regression gate
         run: python scripts/check_regression.py
+
+      - name: TritonForge-X regression gate
+        run: python scripts/check_regression_x.py

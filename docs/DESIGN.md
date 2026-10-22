@@ -67,3 +67,35 @@ the measured median time, expressed as a percentage of the device peak (320 GB/s
 - CI (`.github/workflows/ci.yml`) lints, runs the CPU test subset, and enforces
   `scripts/check_regression.py` against `baselines/kernel_baseline.json`, which fails the
   build when a kernel gets slower or less accurate than the committed baseline.
+
+## TritonForge-X: Intel CPU port
+
+The second target is a stock x86-64 cloud VM with **no GPU and no modern matrix
+extensions** (Broadwell-class Xeon, AVX2/FMA, 2 vCPU). The design constraints change the
+answers, so the plan is deliberately different from the T4 work:
+
+- **Backends are compared, not assumed.** PyTorch eager fp32, `torch.compile`, ONNX
+  Runtime, and four OpenVINO IR variants (fp16, int8, int4 group-128 RTN, int4 group-128
+  AWQ) run the same prompts, greedy decode length and timing loop. The winner is whatever
+  the table says.
+- **Quantization is offline, never in the decode loop.** NNCF PTQ produces the int8 and
+  int4 IRs; AWQ uses 128 wikitext calibration samples and the same group size so the
+  size column is directly comparable. The runtime only dequantizes inside OpenVINO's
+  kernels, which is the closest CPU analogue to the fused Triton GEMM.
+- **Accuracy is a first-class metric.** Top-1 agreement, max/mean absolute error, top-5
+  overlap, mean KL and wikitext-2 PPL against a PyTorch fp32 reference are all computed
+  from the same 65-prompt set plus 16 x 512 wikitext windows. A faster variant that loses
+  quality stays in the table and is labelled as such; see the int4 row.
+- **SYCL is used as a kernel laboratory, not as a second runtime.** Two fused kernels
+  (`swiglu`, `rmsnorm_residual`) plus a STREAM kernel are written in DPC++ with a
+  work-group/vector-width sweep. The reference implementation is the repository's
+  existing PyTorch oracle, and parity is checked before any timing. The kernels are not
+  wired into the OpenVINO graph: doing so would require a custom OpenVINO extension and
+  would make the end-to-end comparison less honest, not more.
+- **Roofline uses measured bandwidth.** The plot's slanted roof uses the STREAM number
+  from the same binary on the same VM, and the flat roof uses the AVX2 FMA peak
+  (`2 FMA ports x 8 lanes x 2 FLOP x 2.2 GHz`). It does not use spec-sheet DRAM bandwidth.
+- **CI cannot rely on oneAPI.** GitHub's hosted runners are not guaranteed to expose an
+  Intel CPU device, so `tests/test_x_kernels_opencl.py` compiles a line-for-line OpenCL C
+  port of the two kernels against POCL on a normal runner and checks parity. The reported
+  performance numbers still come from the DPC++ build on the measured Intel VM.
