@@ -46,6 +46,9 @@ AVX-512/AMX). Full tables and the honest list of regressions:
 | **OpenVINO int8** | **8.33** | **1.99x** | OpenVINO int4 g128 | 21.12 | 1.78x |
 | OpenVINO int4 g128 | 8.33 | 1.99x | OpenVINO int8 | 20.92 | 1.76x |
 
+**The batch-8 winner is ONNX Runtime (22.32 tok/s, 1.88x eager); OpenVINO int8 wins
+batch 1 (8.33 tok/s, 1.99x).**
+
 - int8 keeps **+0.28%** wikitext-2 PPL; int4 RTN loses **+22.95%** and AWQ still
   loses **+15.74%**, so int4 is reported as unusable for quality-sensitive work.
 - DPC++ fused kernels: SwiGLU **6.59x** / RMSNorm+residual **4.50x** over PyTorch at
