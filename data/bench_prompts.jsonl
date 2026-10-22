@@ -1,0 +1,8 @@
+{"id": "b1", "prompt": "Explain why the sky appears blue in one paragraph."}
+{"id": "b2", "prompt": "Write a short Python function that reverses a string."}
+{"id": "b3", "prompt": "Summarize the causes of the French Revolution briefly."}
+{"id": "b4", "prompt": "What are the main differences between TCP and UDP?"}
+{"id": "b5", "prompt": "Give three tips for writing clear technical documentation."}
+{"id": "b6", "prompt": "Describe how a CPU cache improves performance."}
+{"id": "b7", "prompt": "Explain the concept of opportunity cost with an example."}
+{"id": "b8", "prompt": "List the steps to debug a failing unit test."}

@@ -1,0 +1,65 @@
+{"id": "p01", "prompt": "The capital of France is"}
+{"id": "p02", "prompt": "The capital of Japan is"}
+{"id": "p03", "prompt": "The largest planet in the solar system is"}
+{"id": "p04", "prompt": "Water freezes at a temperature of"}
+{"id": "p05", "prompt": "The chemical symbol for gold is"}
+{"id": "p06", "prompt": "The author of Pride and Prejudice is"}
+{"id": "p07", "prompt": "The longest river in Africa is the"}
+{"id": "p08", "prompt": "The currency of Germany is the"}
+{"id": "p09", "prompt": "The human body has this many chromosomes:"}
+{"id": "p10", "prompt": "The speed of light in a vacuum is about"}
+{"id": "p11", "prompt": "2 + 2 ="}
+{"id": "p12", "prompt": "17 multiplied by 3 equals"}
+{"id": "p13", "prompt": "The square root of 144 is"}
+{"id": "p14", "prompt": "If a train travels 60 miles in one hour, it travels how many miles in three hours?"}
+{"id": "p15", "prompt": "What is 25 percent of 80?"}
+{"id": "p16", "prompt": "The next number in the sequence 2, 4, 8, 16 is"}
+{"id": "p17", "prompt": "A dozen eggs contains how many eggs?"}
+{"id": "p18", "prompt": "What is 100 divided by 4?"}
+{"id": "p19", "prompt": "If today is Monday, what day is it three days from now?"}
+{"id": "p20", "prompt": "The sum of the angles in a triangle is"}
+{"id": "p21", "prompt": "Write a Python function that returns the square of a number:"}
+{"id": "p22", "prompt": "In Python, the keyword used to define a function is"}
+{"id": "p23", "prompt": "The HTML tag used to create a hyperlink is"}
+{"id": "p24", "prompt": "A SQL query that selects all rows from a table starts with"}
+{"id": "p25", "prompt": "The git command to create a new branch is"}
+{"id": "p26", "prompt": "In JavaScript, the operator for strict equality is"}
+{"id": "p27", "prompt": "The C function used to allocate memory on the heap is"}
+{"id": "p28", "prompt": "A for loop in Python typically iterates over"}
+{"id": "p29", "prompt": "The command to list files in a Unix directory is"}
+{"id": "p30", "prompt": "JSON stands for JavaScript Object"}
+{"id": "p31", "prompt": "Explain in one sentence why the sky appears blue."}
+{"id": "p32", "prompt": "Explain in one sentence what photosynthesis does."}
+{"id": "p33", "prompt": "Explain in one sentence what a compiler does."}
+{"id": "p34", "prompt": "Explain in one sentence why regular exercise is healthy."}
+{"id": "p35", "prompt": "Explain in one sentence what inflation means in economics."}
+{"id": "p36", "prompt": "Summarize in one sentence: The committee met on Tuesday and decided to postpone the vote until the following month."}
+{"id": "p37", "prompt": "Summarize in one sentence: Heavy rain caused the river to rise, forcing residents to evacuate their homes."}
+{"id": "p38", "prompt": "Correct this sentence: She go to the store yesterday."}
+{"id": "p39", "prompt": "Correct this sentence: Their are three cats on the roof."}
+{"id": "p40", "prompt": "Rewrite this sentence in the past tense: He runs to the station."}
+{"id": "p41", "prompt": "List three primary colors:"}
+{"id": "p42", "prompt": "List three programming languages:"}
+{"id": "p43", "prompt": "List three countries in Europe:"}
+{"id": "p44", "prompt": "List three planets in the solar system:"}
+{"id": "p45", "prompt": "List three mammals:"}
+{"id": "p46", "prompt": "What is the opposite of hot?"}
+{"id": "p47", "prompt": "What is the opposite of ancient?"}
+{"id": "p48", "prompt": "Complete the proverb: An apple a day keeps the"}
+{"id": "p49", "prompt": "Complete the proverb: Actions speak louder than"}
+{"id": "p50", "prompt": "What is the plural of child?"}
+{"id": "p51", "prompt": "What is the past tense of the verb to teach?"}
+{"id": "p52", "prompt": "Translate hello into Spanish:"}
+{"id": "p53", "prompt": "Translate thank you into French:"}
+{"id": "p54", "prompt": "What gas do plants absorb from the atmosphere?"}
+{"id": "p55", "prompt": "What organ pumps blood through the body?"}
+{"id": "p56", "prompt": "Which ocean is the largest?"}
+{"id": "p57", "prompt": "Which country has the city of Toronto?"}
+{"id": "p58", "prompt": "How many minutes are in one hour?"}
+{"id": "p59", "prompt": "What is the boiling point of water in Celsius?"}
+{"id": "p60", "prompt": "The first president of the United States was"}
+{"id": "p61", "prompt": "If all birds can fly and a penguin is a bird, what can we conclude?"}
+{"id": "p62", "prompt": "Name the process by which plants make food from sunlight."}
+{"id": "p63", "prompt": "What does the acronym CPU stand for?"}
+{"id": "p64", "prompt": "What does the acronym RAM stand for?"}
+{"id": "p65", "prompt": "Which data structure follows first in, first out?"}

@@ -32,6 +32,44 @@ loop. See [`docs/DESIGN.md`](docs/DESIGN.md) and the three kernel bugs it fixed 
   (deliberate regression, failing PR, log) is in
   [`docs/REGRESSION_DEMO.md`](docs/REGRESSION_DEMO.md).
 
+## TritonForge-X: Intel CPU
+
+A second target: Qwen2.5-0.5B-Instruct on a GPU-less 2-vCPU Xeon (AVX2 only, no
+AVX-512/AMX). Full tables and the honest list of regressions:
+[`docs/RESULTS_X.md`](docs/RESULTS_X.md); reasoning:
+[`docs/ANALYSIS.md`](docs/ANALYSIS.md).
+
+| Batch 1 | tok/s | vs eager | Batch 8 | tok/s | vs eager |
+| --- | --- | --- | --- | --- | --- |
+| PyTorch eager fp32 | 4.18 | 1.00x | PyTorch eager fp32 | 11.88 | 1.00x |
+| OpenVINO fp16 | 7.41 | 1.77x | **ONNX Runtime** | **22.32** | **1.88x** |
+| **OpenVINO int8** | **8.33** | **1.99x** | OpenVINO int4 g128 | 21.12 | 1.78x |
+| OpenVINO int4 g128 | 8.33 | 1.99x | OpenVINO int8 | 20.92 | 1.76x |
+
+- int8 keeps **+0.28%** wikitext-2 PPL; int4 RTN loses **+22.95%** and AWQ still
+  loses **+15.74%**, so int4 is reported as unusable for quality-sensitive work.
+- DPC++ fused kernels: SwiGLU **6.59x** / RMSNorm+residual **4.50x** over PyTorch at
+  large shapes, with all eight parity shapes passing.
+- `torch.compile` is not faster than eager here; it is in the table as a non-win.
+
+Reproduce on the same host (paths assume the Colab VM layout):
+
+```bash
+pip install -e ".[x]"
+python scripts/probe_hardware.py
+python scripts/convert_openvino.py --variants fp16 int8 int4_g128
+python scripts/validate_openvino.py
+RUNS=10 BATCHES="1 8" bash scripts/run_x_benchmarks.sh
+python scripts/bench_torch_kernels.py
+source /opt/intel/oneapi/setvars.sh
+icpx -fsycl -O3 -std=c++17 -march=native sycl/tfx_sycl.cpp -o build/tfx_sycl
+python scripts/run_sycl.py
+python scripts/tune_openvino.py
+python scripts/profile_x.py
+python scripts/make_x_report.py
+python scripts/check_regression_x.py
+```
+
 ## Layout
 
 ```
@@ -46,7 +84,9 @@ benchmarks/         run_kernels.py, probe_dequant.py, run_e2e.py
 scripts/            sync, sanitize, regression gate, report generator, GPU suite
 baselines/          regression thresholds committed from the T4 run
 tests/              quantization, kernel and integration tests
-docs/               DESIGN.md, BUG_LOG.md, FINAL_REPORT.md
+results/x/          Intel CPU JSON (hardware, models, validation, bench, sycl)
+scripts/            probe, convert, validate, bench, tune, profile, report, gates
+docs/               DESIGN.md, BUG_LOG.md, ANALYSIS.md, RESULTS_X.md, FINAL_REPORT.md
 ```
 
 ## Running

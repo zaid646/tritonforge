@@ -131,3 +131,21 @@ in section 1.
 - Shipped a GitHub Actions regression gate (lint + CPU tests + baseline thresholds) and an
   accessible static report generated from re-runnable benchmarks, and an end-to-end
   Qwen2.5 integration that cuts inference memory **2x** versus fp16 (0.51 GB vs 1.01 GB).
+
+<!-- X_RESULTS_START -->
+## TritonForge-X on Intel CPU
+
+Measured on `Intel(R) Xeon(R) CPU @ 2.20GHz` (2 vCPU, AVX2 only, no AVX-512/AMX). Full tables: [RESULTS_X.md](RESULTS_X.md).
+
+| Backend | tok/s b1 (p95) | TTFT ms b1 (p95) | ITL ms b1 (p95) | Speedup b1 | tok/s b8 | TTFT ms b8 | ITL ms b8 | Speedup b8 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PyTorch eager fp32 | 4.18 (4.80) | 618 (1119) | 229.8 (257.8) | 1.00x | 11.88 | 1740 | 640.1 | 1.00x |
+| torch.compile | 4.19 (4.87) | 551 (779) | 231.5 (259.5) | 1.00x | 11.79 | 1768 | 644.0 | 0.99x |
+| ONNX Runtime CPU | 4.57 (4.76) | 326 (394) | 215.6 (223.5) | 1.09x | 22.32 | 1630 | 317.4 | 1.88x |
+| OpenVINO fp16 | 7.41 (7.81) | 434 (556) | 125.9 (142.3) | 1.77x | 19.71 | 2243 | 346.6 | 1.66x |
+| OpenVINO int8 | 8.33 (9.15) | 386 (476) | 113.0 (140.2) | 1.99x | 20.92 | 2418 | 316.7 | 1.76x |
+| OpenVINO int4 g128 | 8.33 (9.21) | 406 (567) | 112.7 (142.1) | 1.99x | 21.12 | 2141 | 322.1 | 1.78x |
+| OpenVINO int4 g128 AWQ | 8.29 (9.17) | 402 (527) | 113.9 (144.8) | 1.98x | 21.11 | 2104 | 323.3 | 1.78x |
+
+Accuracy parity and the honest list of regressions are in [RESULTS_X.md](RESULTS_X.md#3-accuracy-parity-versus-pytorch-fp32).
+<!-- X_RESULTS_END -->
