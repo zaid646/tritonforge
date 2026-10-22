@@ -1,0 +1,91 @@
+[Step 1/11] Parsing and validating input arguments
+[ INFO ] Parsing input parameters
+[Step 2/11] Loading OpenVINO Runtime
+[ INFO ] OpenVINO:
+[ INFO ] Build ................................. 2026.4.1-22982-e213a147257-releases/2026/4
+[ INFO ] 
+[ INFO ] Device info:
+[ INFO ] CPU
+[ INFO ] Build ................................. 2026.4.1-22982-e213a147257-releases/2026/4
+[ INFO ] 
+[ INFO ] 
+[Step 3/11] Setting device configuration
+[ WARNING ] Turn on performance counters for CPU device since report type is detailed_counters.
+[Step 4/11] Reading model files
+[ INFO ] Loading model files
+[ INFO ] Read model took 149.93 ms
+[ INFO ] Original model I/O parameters:
+[ INFO ] Model inputs:
+[ INFO ]     input_ids (node: input_ids) : i64 / [...] / [?,?]
+[ INFO ]     attention_mask (node: attention_mask) : i64 / [...] / [?,?]
+[ INFO ]     position_ids (node: position_ids) : i64 / [...] / [?,?]
+[ INFO ]     beam_idx (node: beam_idx) : i32 / [...] / [?]
+[ INFO ] Model outputs:
+[ INFO ]     logits (node: __module.lm_head/ov_ext::linear/MatMul) : f32 / [...] / [?,?,151936]
+[Step 5/11] Resizing model to match image sizes and given batch
+[ INFO ] Model batch size: 1
+[Step 6/11] Configuring input of the model
+[ INFO ] Model inputs:
+[ INFO ]     input_ids (node: input_ids) : i64 / [...] / [?,?]
+[ INFO ]     attention_mask (node: attention_mask) : i64 / [...] / [?,?]
+[ INFO ]     position_ids (node: position_ids) : i64 / [...] / [?,?]
+[ INFO ]     beam_idx (node: beam_idx) : i32 / [...] / [?]
+[ INFO ] Model outputs:
+[ INFO ]     logits (node: __module.lm_head/ov_ext::linear/MatMul) : f32 / [...] / [?,?,151936]
+[Step 7/11] Loading the model to the device
+[ INFO ] Compile model took 1288.13 ms
+[ INFO ] Start of compilation memory usage: Peak 1802296 KB
+[ INFO ] End of compilation memory usage: Peak 2027860 KB
+[ INFO ] Compile model ram used 225564 KB
+[Step 8/11] Querying optimal runtime parameters
+[ INFO ] Model:
+[ INFO ]   NETWORK_NAME: Model0
+[ INFO ]   OPTIMAL_NUMBER_OF_INFER_REQUESTS: 1
+[ INFO ]   NUM_STREAMS: 1
+[ INFO ]   INFERENCE_NUM_THREADS: 1
+[ INFO ]   PERF_COUNT: YES
+[ INFO ]   INFERENCE_PRECISION_HINT: <Type: 'float32'>
+[ INFO ]   PERFORMANCE_HINT: LATENCY
+[ INFO ]   EXECUTION_MODE_HINT: ExecutionMode.PERFORMANCE
+[ INFO ]   PERFORMANCE_HINT_NUM_REQUESTS: 1
+[ INFO ]   ENABLE_CPU_PINNING: True
+[ INFO ]   ENABLE_CPU_RESERVATION: False
+[ INFO ]   SCHEDULING_CORE_TYPE: SchedulingCoreType.ANY_CORE
+[ INFO ]   MODEL_DISTRIBUTION_POLICY: set()
+[ INFO ]   ENABLE_HYPER_THREADING: False
+[ INFO ]   EXECUTION_DEVICES: ['CPU']
+[ INFO ]   CPU_DENORMALS_OPTIMIZATION: False
+[ INFO ]   LOG_LEVEL: Level.NO
+[ INFO ]   CPU_SPARSE_WEIGHTS_DECOMPRESSION_RATE: 1.0
+[ INFO ]   ENABLE_TENSOR_PARALLEL: False
+[ INFO ]   TBB_PARTITIONER: TbbPartitioner.STATIC
+[ INFO ]   DYNAMIC_QUANTIZATION_GROUP_SIZE: 32
+[ INFO ]   KV_CACHE_PRECISION: <Type: 'float16'>
+[ INFO ]   KEY_CACHE_PRECISION: <Type: 'float16'>
+[ INFO ]   VALUE_CACHE_PRECISION: <Type: 'float16'>
+[ INFO ]   KEY_CACHE_GROUP_SIZE: 0
+[ INFO ]   VALUE_CACHE_GROUP_SIZE: 0
+[ INFO ]   RUNTIME_REQUIREMENTS: meta=1.0;ov=2026.4.1;isa=Intel AVX2
+[Step 9/11] Creating infer requests and preparing input tensors
+[ WARNING ] No input files were given for input 'input_ids'!. This input will be filled with random values!
+[ WARNING ] No input files were given for input 'attention_mask'!. This input will be filled with random values!
+[ WARNING ] No input files were given for input 'position_ids'!. This input will be filled with random values!
+[ INFO ] Fill input 'input_ids' with random values 
+[ INFO ] Fill input 'attention_mask' with random values 
+[ INFO ] Fill input 'position_ids' with random values 
+[Step 10/11] Measuring performance (Start inference asynchronously, 1 inference requests, limits: 3 iterations)
+[ INFO ] Benchmarking in full mode (inputs filling are included in measurement loop).
+[ INFO ] First inference took 1626.94 ms
+[Step 11/11] Dumping statistics report
+[ INFO ] Performance counters report is stored to /content/TritonForge/results/x/profiles/ov_report/benchmark_detailed_counters_report.csv
+[ INFO ] Statistics report is stored to /content/TritonForge/results/x/profiles/ov_report/benchmark_report.csv
+[ INFO ] Execution Devices:['CPU']
+[ INFO ] Count:            3 iterations
+[ INFO ] Duration:         2510.56 ms
+[ INFO ] Latency:
+[ INFO ]    Median:        839.27 ms
+[ INFO ]    Average:       836.59 ms
+[ INFO ]    Min:           818.82 ms
+[ INFO ]    Max:           851.70 ms
+[ INFO ] Throughput:   1.19 FPS
+
