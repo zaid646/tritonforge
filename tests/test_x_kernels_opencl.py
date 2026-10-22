@@ -92,7 +92,7 @@ def test_rmsnorm_residual_matches_pytorch(binary, m, n, wg, tmp_path):
     weight = torch.empty(n).uniform_(0.5, 1.0)
     out = run(
         binary,
-        "rmsnorm",
+        "rmsnorm_residual",
         m,
         n,
         wg,
