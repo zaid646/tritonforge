@@ -18,6 +18,12 @@ from .reference import (  # noqa: F401
     rmsnorm_residual_reference,
     swiglu_reference,
 )
+from .svd import (  # noqa: F401
+    approximation_error,
+    compression_ratio,
+    eigen_decompose,
+    svd_low_rank,
+)
 
 __all__ = [
     "__version__",
@@ -33,4 +39,8 @@ __all__ = [
     "quantized_linear_reference",
     "rmsnorm_residual_reference",
     "swiglu_reference",
+    "approximation_error",
+    "compression_ratio",
+    "eigen_decompose",
+    "svd_low_rank",
 ]
